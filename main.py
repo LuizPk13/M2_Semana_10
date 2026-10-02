@@ -5,6 +5,8 @@ import pandas as pd
 
 # definindo o titulo da pagina
 st.title("Lendo arquivos csv")
+st.header("Turma Visualização de Dados - FIESC 2026/2")
+st.subheader("Semana Streamlit Básico")
 
 
 # criando a liberação de upload de arquivos csv na pagina
@@ -33,11 +35,15 @@ if arquivo_enviado is not None:
             options=colunas_categoricas,
         )
 
+        st.write(f"Coluna Selecionada de Filtro: {coluna_cat}")
+
         opcoes_cat = sorted(df[coluna_cat].dropna().unique())
         categoria_escolhida = st.selectbox(
             label=f"Selecione o valor em '{coluna_cat}':",
             options=opcoes_cat,
         )
+
+        st.write(f"Coluna Selecionada de Filtro: {categoria_escolhida}")
 
         df_filtrado = df_filtrado[df_filtrado[coluna_cat] == categoria_escolhida]
     # --- PASSO 5: Filtro por Coluna Numérica (st.slider e st.number_input) ---
@@ -79,6 +85,52 @@ if arquivo_enviado is not None:
     # Exibe a contagem e a tabela final filtrada
     st.write(f"Exibindo **{len(df_filtrado)}** de **{len(df)}** registros:")
     st.dataframe(df_filtrado, use_container_width=True)
+
+    # --------------------------------------------------------------------------
+    # 3. COLUNAS PARALELAS (st.columns) E CARTÕES DE MÉTRICAS (st.metric)
+    # --------------------------------------------------------------------------
+    # st.columns(3) divide a tela horizontalmente em 3 partes iguais
+    st.subheader("📌 Indicadores Rápidos (KPIs)")
+    col1, col2, col3 = st.columns(3)
+
+    # st.metric cria cartões visuais de destaque para números importantes
+    col1.metric(label="Linhas Filtradas", value=len(df_filtrado))
+    col2.metric(label="Total Original", value=len(df))
+    col3.metric(label="Total de Colunas", value=len(df.columns))
+
+    st.divider()
+
+    # --------------------------------------------------------------------------
+    # Exemplo simples de Sidebar (Barra Lateral)
+    # --------------------------------------------------------------------------
+    with st.sidebar:
+        st.header("⚙️ Barra Lateral (st.sidebar)")
+        st.write(
+            "Tudo colocado dentro deste bloco aparece no menu retrátil à esquerda!"
+        )
+        st.info(f"Registros filtrados no momento: {len(df_filtrado)}")
+
+        # --------------------------------------------------------------------------
+        # 4. NAVEGAÇÃO EM ABAS (st.tabs)
+        # --------------------------------------------------------------------------
+    
+        # st.tabs permite alternar entre visões diferentes sem rolar a página
+        aba1, aba2 = st.tabs(["📋 Tabela Filtrada", "📊 Resumo Estatístico"])
+
+        # Conteúdo que aparece quando o aluno clica na primeira aba
+        with aba1:
+            st.write(f"Exibindo **{len(df_filtrado)}** de **{len(df)}** registros:")
+            st.dataframe(df_filtrado, use_container_width=True)
+
+        # Conteúdo que aparece quando o aluno clica na segunda aba
+        with aba2:
+            st.write("Estatísticas descritivas (média, mínimo, máximo, etc.):")
+            st.dataframe(df_filtrado.describe(), use_container_width=True)
+
+        # Base bruta completa dentro do expander
+        with st.expander("Ver base completa original"):
+            st.dataframe(df, use_container_width=True)
+
 
 else:
     st.info("ℹ️ Por favor, faça o upload de um arquivo CSV para visualizar a tabela.")
