@@ -2,11 +2,17 @@
 import streamlit as st
 import pandas as pd
 
+# importando função genérica do arquivo functions.py (exemplo em aula)
+from functions import mensagem_boas_vindas
+
 
 # definindo o titulo da pagina
 st.title("Lendo arquivos csv")
 st.header("Turma Visualização de Dados - FIESC 2026/2")
 st.subheader("Semana Streamlit Básico")
+
+# Exemplo de uso da função externa importada
+mensagem_boas_vindas("Turma FIESC")
 
 
 # criando a liberação de upload de arquivos csv na pagina

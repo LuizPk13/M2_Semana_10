@@ -1,6 +1,8 @@
 # importando as libs
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import plotly.express as px
 
 # definindo o titulo da pagina
 st.title("Lendo arquivos csv")
@@ -15,14 +17,21 @@ st.subheader("Semana Streamlit Básico")
 arquivo_enviado = st.sidebar.file_uploader(
     label="Envie um arquivo CSV",
     type=["csv"],
-    help="Selecione um arquivo com extensão .csv",
+    help="Selecione um arquivo com extensão .csv, POR FAVOR!",
 )
 
 # Passo 3, 4 e 5: Ler, filtrar (texto e número) e exibir os dados
 if arquivo_enviado is not None:
-    # Passo 3: Ler o arquivo com pd.read_csv()
-    df = pd.read_csv(arquivo_enviado)
+    @st.cache_data  # guarda o resultado na memória RAM (evita re-leitura a cada clique)
+    def carregar_dados(arquivo):  # função para ler os dados do arquivo enviado
+        return pd.read_csv(
+            arquivo
+        )  # lê o arquivo CSV com pandas apenas na primeira execução
 
+    df = carregar_dados(
+        arquivo_enviado
+    )  # executa a função de leitura protegida pelo cache
+    
     # DataFrame auxiliar para acumular os filtros
     df_filtrado = df.copy()
 
@@ -113,6 +122,51 @@ if arquivo_enviado is not None:
     # Base bruta completa dentro do expander
     with st.expander("Ver base completa original"):
         st.dataframe(df, use_container_width=True)
+
+
+    st.divider()
+    st.header("📊 Aula 03 - Visualizações e Performance")
+
+
+    # 1. teste plt
+    st.subheader("1. Visualização Estática com Matplotlib (st.pyplot)")
+    st.caption("Ideal para distribuições de frequência e relatórios estáticos.")
+
+    if colunas_numericas and not df_filtrado.empty:
+        fig, ax = plt.subplots(figsize=(8, 4))  # cria a figura (fig) e os eixos (ax)
+        ax.hist(  # plota o histograma de frequência
+            df_filtrado[coluna_num].dropna(),  # valores da coluna numérica sem nulos
+            bins=20,  # quantidade de colunas/faixas do histograma
+            color="#2E86C1",  # cor azul das barras
+            edgecolor="black",  # borda preta em cada barra
+        )
+        ax.set_title(f"Distribuição do {coluna_num}")  # título do gráfico
+        ax.set_xlabel(f"{coluna_num} (R$)")  # rótulo do eixo horizontal X
+        ax.set_ylabel("Frequência")  # rótulo do eixo vertical Y
+
+        st.pyplot(fig)  # renderiza a figura no Streamlit (evita plt.show())
+    else:
+        st.info("Nenhuma coluna numérica disponível para gerar o gráfico Matplotlib.")
+
+    # 2. teste ploply
+    st.subheader("2. Visualização Interativa com Plotly (st.plotly_chart)")
+    st.caption("Suporte nativo a hover (detalhes ao passar o mouse), zoom e pan.")
+
+    if colunas_numericas and not df_filtrado.empty:
+        fig_plotly = px.histogram(  # cria histograma interativo do Plotly
+            df_filtrado,  # dados filtrados
+            x=coluna_num,  # coluna no eixo horizontal X
+            color=(
+                coluna_cat if colunas_categoricas else None
+            ),  # divide por cores de categoria se houver
+            title=f"Evolução/Distribuição Interativa de {coluna_num}",  # título da visualização
+            marginal="box",  # adiciona boxplot no topo do gráfico
+        )
+        st.plotly_chart(
+            fig_plotly, use_container_width=True
+        )  # exibe ajustado à largura da tela
+    else:
+        st.info("Nenhuma coluna numérica disponível para gerar o gráfico Plotly.")
 
 else:
     st.info(
