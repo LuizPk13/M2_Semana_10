@@ -9,6 +9,12 @@ st.title("Lendo arquivos csv")
 st.header("Turma Visualização de Dados - FIESC 2026/2")
 st.subheader("Semana Streamlit Básico")
 
+# Configuração da página
+st.set_page_config(page_title="Dashboard Financeiro B3", 
+            page_icon="📈",
+            layout="wide",
+            initial_sidebar_state="expanded" )
+
 # ==============================================================================
 # ITEM 1: Mover filtros e botão de carregar arquivo para a barra lateral (st.sidebar)
 # ==============================================================================
