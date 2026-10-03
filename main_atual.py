@@ -10,10 +10,12 @@ st.header("Turma Visualização de Dados - FIESC 2026/2")
 st.subheader("Semana Streamlit Básico")
 
 # Configuração da página
-st.set_page_config(page_title="Dashboard Financeiro B3", 
-            page_icon="📈",
-            layout="wide",
-            initial_sidebar_state="expanded" )
+st.set_page_config(
+    page_title="Dashboard Financeiro B3",
+    page_icon="📈",
+    layout="wide",
+    initial_sidebar_state="auto",
+)
 
 # ==============================================================================
 # ITEM 1: Mover filtros e botão de carregar arquivo para a barra lateral (st.sidebar)
@@ -28,6 +30,7 @@ arquivo_enviado = st.sidebar.file_uploader(
 
 # Passo 3, 4 e 5: Ler, filtrar (texto e número) e exibir os dados
 if arquivo_enviado is not None:
+
     @st.cache_data  # guarda o resultado na memória RAM (evita re-leitura a cada clique)
     def carregar_dados(arquivo):  # função para ler os dados do arquivo enviado
         return pd.read_csv(
@@ -37,7 +40,7 @@ if arquivo_enviado is not None:
     df = carregar_dados(
         arquivo_enviado
     )  # executa a função de leitura protegida pelo cache
-    
+
     # DataFrame auxiliar para acumular os filtros
     df_filtrado = df.copy()
 
@@ -129,10 +132,8 @@ if arquivo_enviado is not None:
     with st.expander("Ver base completa original"):
         st.dataframe(df, use_container_width=True)
 
-
     st.divider()
     st.header("📊 Aula 03 - Visualizações e Performance")
-
 
     # 1. teste plt
     st.subheader("1. Visualização Estática com Matplotlib (st.pyplot)")
