@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 
 # importando função genérica do arquivo functions.py (exemplo em aula)
-from functions import mensagem_boas_vindas
+# from functions import mensagem_boas_vindas
 
 
 # definindo o titulo da pagina
@@ -17,9 +17,9 @@ mensagem_boas_vindas("Turma FIESC")
 
 # criando a liberação de upload de arquivos csv na pagina
 arquivo_enviado = st.file_uploader(
-        label="Envie um arquivo CSV",
-        type=["csv"],
-        help='Selecione um arquivo com extensão .csv'
+    label="Envie um arquivo CSV",
+    type=["csv"],
+    help="Selecione um arquivo com extensão .csv",
 )
 
 # Passo 3, 4 e 5: Ler, filtrar (texto e número) e exibir os dados
@@ -119,7 +119,7 @@ if arquivo_enviado is not None:
         # --------------------------------------------------------------------------
         # 4. NAVEGAÇÃO EM ABAS (st.tabs)
         # --------------------------------------------------------------------------
-    
+
         # st.tabs permite alternar entre visões diferentes sem rolar a página
         aba1, aba2 = st.tabs(["📋 Tabela Filtrada", "📊 Resumo Estatístico"])
 
