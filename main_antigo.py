@@ -12,7 +12,7 @@ st.header("Turma Visualização de Dados - FIESC 2026/2")
 st.subheader("Semana Streamlit Básico")
 
 # Exemplo de uso da função externa importada
-mensagem_boas_vindas("Turma FIESC")
+# mensagem_boas_vindas("Turma FIESC")
 
 
 # criando a liberação de upload de arquivos csv na pagina
